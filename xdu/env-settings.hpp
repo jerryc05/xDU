@@ -6,7 +6,7 @@
 #include <iostream>
 #include <optional>
 #include <vector>
-using std::cout, std::cerr, std::stoull;
+using std::cout, std::cerr, std::stoull, std::min, std::numeric_limits;
 using InvalidArgument = std::invalid_argument;
 using OutOfRange = std::out_of_range;
 
@@ -27,7 +27,7 @@ template <typename T> using Optional = std::optional<T>;
 // GCC
 #if defined(__GNUC__) && __GNUC__
 #if (defined(__x86_64__) && __x86_64__) || (defined(__ppc64__) && __ppc64__)
-#define _ENV_64
+#define _ENV_640
 #else
 #define _ENV_32
 #endif // (defined(__x86_64__) && __x86_64__) ||

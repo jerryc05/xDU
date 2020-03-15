@@ -11,7 +11,10 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
     exit(2);
   }
   try {
-    depth = stoull(argv[++i]);
+    auto parsed = stoull(argv[++i]);
+    auto min_value =
+        min(parsed, static_cast<uint64_t>(numeric_limits<DepthType>::max()));
+    depth = static_cast<DepthType>(min_value);
   } catch (const InvalidArgument &e) {
     cerr << "ERR!  Invalid input for `depth` after \"-d\".\n";
     exit(3);
@@ -55,7 +58,7 @@ inline auto parse_args(int argc, char *argv[]) {
 
   } else {
     Vec<fs::path> paths;
-    Optional<DepthType> depth = {};
+    Optional<DepthType> depth;
 
     for (int i = 0; i < argc; ++i) {
       if (strcmp("-d", argv[i]) == 0)
@@ -76,9 +79,9 @@ int main(int argc, char *argv[]) {
 #endif
 
   auto config = parse_args(argc - 1, argv + 1);
-  cout << config.depth << '\n';
+  cout << +config.depth << '\n';
   for (const auto &path : config.paths) {
-    cout << path << '\n';
+    cout << fs::absolute(path) << '\n';
   }
   return 0;
 }
