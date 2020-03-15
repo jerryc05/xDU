@@ -1,5 +1,5 @@
-#ifndef XDU_ENV_SETTINGS_H
-#define XDU_ENV_SETTINGS_H
+#ifndef XDU_ENV_SETTINGS_HPP
+#define XDU_ENV_SETTINGS_HPP
 
 #include <cstring>
 #include <filesystem>
@@ -34,4 +34,4 @@ template <typename T> using Optional = std::optional<T>;
        // (defined(__ppc64__) &&__ppc64__)
 #endif // defined(__GNUC__) && __GNUC__
 
-#endif // XDU_ENV_SETTINGS_H
+#endif // XDU_ENV_SETTINGS_HPP

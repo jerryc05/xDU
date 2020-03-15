@@ -1,4 +1,4 @@
-#include "xdu/core.h"
+#include "xdu/core.hpp"
 
 inline auto handle_arg_depth(int argc, char *argv[], int &i,
                              Optional<DepthType> &depth) {

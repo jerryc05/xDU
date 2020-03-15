@@ -1,7 +1,7 @@
-#ifndef XDU_CORE_H
-#define XDU_CORE_H
+#ifndef XDU_CORE_HPP
+#define XDU_CORE_HPP
 
-#include "env-settings.h"
+#include "env-settings.hpp"
 
 using DepthType =
 #ifdef _ENV_64
@@ -20,4 +20,4 @@ struct XDuConfig {
   DepthType depth = DEFAULT_DEPTH;
 };
 
-#endif // XDU_CORE_H
+#endif // XDU_CORE_HPP

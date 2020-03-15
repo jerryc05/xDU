@@ -53,4 +53,4 @@ message("")
 message("[${CMAKE_CXX_FLAGS}]")
 message("")
 
-add_executable(xDU main.cpp xdu/core.cpp xdu/core.h xdu/env-settings.h)
+add_executable(xDU main.cpp xdu/core.cpp xdu/core.hpp xdu/env-settings.hpp)
