@@ -6,7 +6,7 @@
 #include <iostream>
 #include <optional>
 #include <vector>
-using std::cout, std::stoull;
+using std::cout, std::cerr, std::stoull;
 using InvalidArgument = std::invalid_argument;
 using OutOfRange = std::out_of_range;
 

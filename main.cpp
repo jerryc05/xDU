@@ -3,20 +3,20 @@
 inline auto handle_arg_depth(int argc, char *argv[], int &i,
                              Optional<DepthType> &depth) {
   if (depth.has_value()) {
-    cout << "ERR!  Duplicate definition of \"-d\".\n";
+    cerr << "ERR!  Duplicate definition of \"-d\".\n";
     exit(1);
   }
   if (i + 1 >= argc) {
-    cout << "ERR!  No input for `depth` after \"-d\".\n";
+    cerr << "ERR!  No input for `depth` after \"-d\".\n";
     exit(2);
   }
   try {
     depth = stoull(argv[++i]);
   } catch (const InvalidArgument &e) {
-    cout << "ERR!  Invalid input for `depth` after \"-d\".\n";
+    cerr << "ERR!  Invalid input for `depth` after \"-d\".\n";
     exit(3);
   } catch (const OutOfRange &e) {
-    cout << "ERR!  Input for `depth` after \"-d\" is out of range.\n";
+    cerr << "ERR!  Input for `depth` after \"-d\" is out of range.\n";
     exit(4);
   }
 }
@@ -24,7 +24,7 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
 inline auto handle_arg_dir(char *path_c_str, Vec<fs::path> &paths) {
   auto path = fs::path(path_c_str);
   if (!fs::is_directory(path) && !fs::is_regular_file(path)) {
-    cout << "ERR!  The following input is not a directory or file:\n\t" << path
+    cerr << "ERR!  The following input is not a directory or file:\n\t" << path
          << " (aka " << fs::absolute(path) << " )\n";
     exit(5);
   }
