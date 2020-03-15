@@ -33,8 +33,8 @@ XDuConfig parse_args(int argc, char *argv[]) {
         "\tThe options are as follows:\n"
         "\n"
         "\t-d depth\n"
-        "\tPrint only `depth` level of directory. Default to "
-         << DEFAULT_DEPTH << '\n';
+        "\t\t\tPrint only `depth` level of directory. Default to "
+         << DEFAULT_DEPTH << ".\n";
     exit(0);
   } else {
     Vec<fs::path> paths;
