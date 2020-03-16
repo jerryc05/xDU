@@ -33,7 +33,7 @@ const int ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE = 6;
 // GCC
 #if defined(__GNUC__) && __GNUC__
 #if (defined(__x86_64__) && __x86_64__) || (defined(__ppc64__) && __ppc64__)
-#define _ENV_640
+#define _ENV_64
 #else
 #define _ENV_32
 #endif // (defined(__x86_64__) && __x86_64__) ||
