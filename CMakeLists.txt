@@ -36,15 +36,17 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 -Wundef \
 -Wunused \
 -Wuseless-cast \
--Wwrite-strings \
-")
+-Wwrite-strings")
 endif ()
 message("")
 
-if (CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message("CMAKE IN DEBUG MODE")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og")
-elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s")
+    endif ()
     message("CMAKE IN RELEASE MODE")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -fexpensive-optimizations -march=native")
 endif ()
