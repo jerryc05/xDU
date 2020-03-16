@@ -9,11 +9,17 @@
 using std::cout, std::cerr, std::stoull, std::min, std::numeric_limits;
 using InvalidArgument = std::invalid_argument;
 using OutOfRange = std::out_of_range;
+template <typename T> using Vec = std::vector<T>;
+template <typename T> using Optional = std::optional<T>;
 
 namespace fs = std::filesystem;
-template <typename T> using Vec = std::vector<T>;
 
-template <typename T> using Optional = std::optional<T>;
+const int ERR_CODE_NO_ARG = 1;
+const int ERR_CODE_DUP_DEF_OF_D_FLAG = 2;
+const int ERR_CODE_NO_INPUT_FOR_DEPTH_AFTER_D_FLAG = 3;
+const int ERR_CODE_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG = 4;
+const int ERR_CODE_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE = 5;
+const int ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE = 6;
 
 // Windows
 #if defined(_WIN32) || defined(_WIN64)

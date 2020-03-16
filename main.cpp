@@ -4,11 +4,11 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
                              Optional<DepthType> &depth) {
   if (depth.has_value()) {
     cerr << "ERR!  Duplicate definition of \"-d\".\n";
-    exit(1);
+    exit(ERR_CODE_DUP_DEF_OF_D_FLAG);
   }
   if (i + 1 >= argc) {
     cerr << "ERR!  No input for `depth` after \"-d\".\n";
-    exit(2);
+    exit(ERR_CODE_NO_INPUT_FOR_DEPTH_AFTER_D_FLAG);
   }
   try {
     auto parsed = stoull(argv[++i]);
@@ -17,10 +17,10 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
     depth = static_cast<DepthType>(min_value);
   } catch (const InvalidArgument &e) {
     cerr << "ERR!  Invalid input for `depth` after \"-d\".\n";
-    exit(3);
+    exit(ERR_CODE_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
   } catch (const OutOfRange &e) {
     cerr << "ERR!  Input for `depth` after \"-d\" is out of range.\n";
-    exit(4);
+    exit(ERR_CODE_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE);
   }
 }
 
@@ -29,7 +29,7 @@ inline auto handle_arg_dir(char *path_c_str, Vec<fs::path> &paths) {
   if (!fs::is_directory(path) && !fs::is_regular_file(path)) {
     cerr << "ERR!  The following input is not a directory or file:\n\t" << path
          << " (aka " << fs::absolute(path) << " )\n";
-    exit(5);
+    exit(ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE);
   }
   paths.push_back(path);
 }
@@ -54,7 +54,7 @@ inline auto parse_args(int argc, char *argv[]) {
             "`depth` is 2^64 on 64bit OS, 2^32 on 32bit OS, and 2^8 otherwise. "
             "Default value is "
          << DEFAULT_DEPTH << ".\n";
-    exit(0);
+    exit(ERR_CODE_NO_ARG);
 
   } else {
     Vec<fs::path> paths;
