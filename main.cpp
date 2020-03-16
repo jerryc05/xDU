@@ -11,10 +11,14 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
     exit(ERR_CODE_NO_INPUT_FOR_DEPTH_AFTER_D_FLAG);
   }
   try {
+#ifdef _ENV_64
+    depth = stoull(argv[++i]);
+#else
     auto parsed = stoull(argv[++i]);
     auto min_value =
         min(parsed, static_cast<uint64_t>(numeric_limits<DepthType>::max()));
     depth = static_cast<DepthType>(min_value);
+#endif
   } catch (const InvalidArgument &e) {
     cerr << "ERR!  Invalid input for `depth` after \"-d\".\n";
     exit(ERR_CODE_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
