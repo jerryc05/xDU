@@ -25,7 +25,7 @@ const int ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE = 6;
 #if defined(_WIN32) || defined(_WIN64)
 #if defined(_WIN64) && _WIN64
 #define _ENV_64
-#elif defined(_WIN43) && _WIN32
+#elif defined(_WIN32) && _WIN32
 #define _ENV_32
 #endif // _WIN64
 #endif // defined(_WIN32) || defined(_WIN64)
