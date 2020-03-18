@@ -21,12 +21,14 @@ const int ERR_CODE_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG = 4;
 const int ERR_CODE_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE = 5;
 const int ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE = 6;
 
+auto init_env() {
 #ifndef NDEBUG
-// debug mode
+  // debug mode
 #else
-// non-debug mode
+  // non-debug mode
   std::ios::sync_with_stdio(false);
 #endif
+}
 
 // Windows
 #if defined(_WIN32) || defined(_WIN64)

@@ -75,6 +75,8 @@ inline auto parse_args(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
+  init_env();
+
   auto config = parse_args(argc - 1, argv + 1);
   cout << +config.depth << '\n';
   for (const auto &path : config.paths) {
