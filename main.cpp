@@ -75,13 +75,6 @@ inline auto parse_args(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-#ifndef NDEBUG
-  // debug mode
-#else
-  // non-debug mode
-  std::ios::sync_with_stdio(false);
-#endif
-
   auto config = parse_args(argc - 1, argv + 1);
   cout << +config.depth << '\n';
   for (const auto &path : config.paths) {
