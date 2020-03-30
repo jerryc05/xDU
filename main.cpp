@@ -74,7 +74,7 @@ inline auto parse_args(int argc, char *argv[]) {
   }
 }
 
-int main(int argc, char *argv[]) try{
+int main(int argc, char *argv[]) try {
   init_env();
 
   auto config = parse_args(argc - 1, argv + 1);
@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) try{
     cout << Fs::absolute(path) << '\n';
   }
   return 0;
-}catch(Exception& e){
-  e.what()
+} catch (Exception &e) {
+  ErrLogger() << e.what();
+  return -1;
 }

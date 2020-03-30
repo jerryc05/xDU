@@ -6,6 +6,7 @@
 #include <iostream>
 #include <optional>
 #include <vector>
+#include "utils/logger.hpp"
 
 using
 std::cout, std::cerr,

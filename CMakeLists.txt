@@ -4,11 +4,13 @@ message("")
 
 add_executable(xDU main.cpp
         src/xdu.cpp src/xdu.hpp
-        src/env-settings.hpp)
+        src/env-settings.hpp
+        src/utils/logger.cpp src/utils/logger.hpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message("Adding GCC Flags...")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+-fdelete-dead-exceptions \
 -fstrict-enums \
 -ftrapv \
 -funroll-loops \
@@ -35,23 +37,22 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 -Wpointer-arith \
 -Wshadow \
 -Wsign-conversion \
--Wswitch-default \
--Wswitch-enum \
 -Wundef \
 -Wunused \
 -Wuseless-cast \
--Wwrite-strings")
+-Wwrite-strings \
+")
 endif ()
 message("")
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
     message("CMAKE IN DEBUG MODE")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
-elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+    message("CMAKE IN RELEASE MODE")
     if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s")
     endif ()
-    message("CMAKE IN RELEASE MODE")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -fexpensive-optimizations -march=native")
 endif ()
 message("")
