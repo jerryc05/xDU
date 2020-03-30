@@ -61,7 +61,7 @@ dkms.conf
 # User-specific stuff:
 .idea/workspace.xml
 .idea/tasks.xml
-/.idea/deployment.xml
+.idea/deployment.xml
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 

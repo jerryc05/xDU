@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.4)
 project(xDU)
 message("")
 
+add_executable(xDU main.cpp
+        src/xdu.cpp src/xdu.hpp
+        src/env-settings.hpp)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message("Adding GCC Flags...")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
@@ -54,5 +58,3 @@ message("")
 
 message("[${CMAKE_CXX_FLAGS}]")
 message("")
-
-add_executable(xDU main.cpp xdu/core.cpp xdu/core.hpp xdu/env-settings.hpp)

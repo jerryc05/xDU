@@ -1,14 +1,14 @@
-#include "xdu/core.hpp"
+#include "src/xdu.hpp"
 
 inline auto handle_arg_depth(int argc, char *argv[], int &i,
                              Optional<DepthType> &depth) {
   if (depth.has_value()) {
     cerr << "ERR!  Duplicate definition of \"-d\".\n";
-    exit(ERR_CODE_DUP_DEF_OF_D_FLAG);
+    throw RuntimeError(ERR_STR_DUP_DEF_OF_D_FLAG);
   }
   if (i + 1 >= argc) {
     cerr << "ERR!  No input for `depth` after \"-d\".\n";
-    exit(ERR_CODE_NO_INPUT_FOR_DEPTH_AFTER_D_FLAG);
+    throw RuntimeError(ERR_STR_NO_INPUT_FOR_DEPTH_AFTER_D_FLAG);
   }
   try {
 #ifdef _ENV_64
@@ -21,19 +21,19 @@ inline auto handle_arg_depth(int argc, char *argv[], int &i,
 #endif
   } catch (const InvalidArgument &e) {
     cerr << "ERR!  Invalid input for `depth` after \"-d\".\n";
-    exit(ERR_CODE_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
+    throw RuntimeError(ERR_STR_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
   } catch (const OutOfRange &e) {
     cerr << "ERR!  Input for `depth` after \"-d\" is out of range.\n";
-    exit(ERR_CODE_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE);
+    throw RuntimeError(ERR_STR_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE);
   }
 }
 
-inline auto handle_arg_dir(char *path_c_str, Vec<fs::path> &paths) {
-  auto path = fs::path(path_c_str);
-  if (!fs::is_directory(path) && !fs::is_regular_file(path)) {
+inline auto handle_arg_dir(char *path_c_str, Vec<Fs::path> &paths) {
+  auto path = Fs::path(path_c_str);
+  if (!Fs::is_directory(path) && !Fs::is_regular_file(path)) {
     cerr << "ERR!  The following input is not a directory or file:\n\t" << path
-         << " (aka " << fs::absolute(path) << " )\n";
-    exit(ERR_CODE_INPUT_PATH_IS_NOT_A_DIR_OR_FILE);
+         << " (aka " << Fs::absolute(path) << " )\n";
+    throw RuntimeError(ERR_STR_INPUT_PATH_IS_NOT_A_DIR_OR_FILE);
   }
   paths.push_back(path);
 }
@@ -58,10 +58,10 @@ inline auto parse_args(int argc, char *argv[]) {
             "`depth` is 2^64 on 64bit OS, 2^32 on 32bit OS, and 2^8 otherwise. "
             "Default value is "
          << DEFAULT_DEPTH << ".\n";
-    exit(ERR_CODE_NO_ARG);
+    throw RuntimeError(ERR_STR_NO_ARG);
 
   } else {
-    Vec<fs::path> paths;
+    Vec<Fs::path>       paths;
     Optional<DepthType> depth;
 
     for (int i = 0; i < argc; ++i) {
@@ -74,13 +74,15 @@ inline auto parse_args(int argc, char *argv[]) {
   }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) try{
   init_env();
 
   auto config = parse_args(argc - 1, argv + 1);
   cout << +config.depth << '\n';
   for (const auto &path : config.paths) {
-    cout << fs::absolute(path) << '\n';
+    cout << Fs::absolute(path) << '\n';
   }
   return 0;
+}catch(Exception& e){
+  e.what()
 }

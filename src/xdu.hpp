@@ -16,8 +16,8 @@ using DepthType =
 const uint64_t DEFAULT_DEPTH = 2;
 
 struct XDuConfig {
-  Vec<fs::path> paths; // 3*8 bytes
-  DepthType depth = DEFAULT_DEPTH;
+  Vec<Fs::path> paths; // 3*8 bytes
+  DepthType     depth = DEFAULT_DEPTH;
 };
 
 #endif // XDU_CORE_HPP
