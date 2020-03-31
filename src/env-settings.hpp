@@ -37,18 +37,18 @@ constexpr auto ERR_STR_INPUT_PATH_IS_NOT_A_DIR_OR_FILE           =
 // Windows
 #if defined(_WIN32) || defined(_WIN64)
 #if defined(_WIN64) && _WIN64
-#define _ENV_64
+#define ENV_64_BIT
 #elif defined(_WIN32) && _WIN32
-#define _ENV_32
+#define ENV_32_BIT
 #endif // _WIN64
 #endif // defined(_WIN32) || defined(_WIN64)
 
 // GCC
 #if defined(__GNUC__) && __GNUC__
 #if (defined(__x86_64__) && __x86_64__) || (defined(__ppc64__) && __ppc64__)
-#define _ENV_64
+#define ENV_64_BIT
 #else
-#define _ENV_32
+#define ENV_32_BIT
 #endif // (defined(__x86_64__) && __x86_64__) ||
 // (defined(__ppc64__) &&__ppc64__)
 #endif // defined(__GNUC__) && __GNUC__

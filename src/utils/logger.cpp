@@ -1,6 +1,5 @@
 #include "logger.hpp"
 #include <iomanip>
-#include <iostream>
 #include <chrono>
 #include <csignal>
 
