@@ -4,15 +4,19 @@
 #include <chrono>
 #include <csignal>
 
-using std::setw, std::move;
-using OutFileStream = std::ofstream;
+/* Tweaking start */
 using TimeUnit = std::chrono::microseconds;
-using Sec = std::chrono::seconds;
-using HighResClock = std::chrono::high_resolution_clock;
+
+#ifndef LOG_FILENAME_OVERRIDE
+#define LOG_FILENAME_OVERRIDE
+constexpr auto LOG_FILENAME = "log.log";
+#endif
+/* Tweaking end */
+
+using OutFileStream = std::ofstream;
 using RuntimeError = std::runtime_error;
 
-constexpr auto TIME_FMT1 = "%FT%T";
-constexpr auto TIME_FMT2 = "%z";
+constexpr auto TIME_FMT = "%Y-%m-%dT%H:%M:%S";
 
 #ifdef unix
 constexpr auto RED_FMT = "\033[1;91m";  // Bold High Intensity Red
@@ -26,15 +30,11 @@ constexpr auto LGR_FMT = "";
 constexpr auto NOC_FMT = "";
 #endif
 
-#ifndef LOG_FILENAME_OVERRIDE
-#define LOG_FILENAME_OVERRIDE
-constexpr auto LOG_FILENAME = "log.log";
-#endif
-
 auto &write_time(OutStream &stream) {
-  auto now = HighResClock::now();
+  using namespace std::chrono;
+  using Clock = system_clock;
 
-  constexpr auto UNIT   = (Sec(1) - TimeUnit(0)).count();
+  constexpr auto UNIT   = (seconds(1) - TimeUnit(0)).count();
   constexpr auto DIGITS = []() {
     switch (UNIT) {
       case 1:
@@ -50,17 +50,19 @@ auto &write_time(OutStream &stream) {
     }
   }();
 
-  auto sub_s = duration_cast<TimeUnit>(now.time_since_epoch()) % UNIT;
-  auto time_ = HighResClock::to_time_t(now);
-  auto tm    = *std::localtime(&time_);
+  auto       now   = Clock::now();
+  const auto time_ = Clock::to_time_t(now);
+  const auto tm    = *std::localtime(&time_);
 
-  return stream << std::put_time(&tm, TIME_FMT1)
-                << '.' << std::setfill('0') << std::setw(DIGITS) << sub_s.count()
-                << std::put_time(&tm, TIME_FMT2);
+  const auto sub_s = duration_cast<TimeUnit>(now.time_since_epoch()) % UNIT;
+
+  return stream << std::put_time(&tm, TIME_FMT)
+                << '.' << std::setfill('0') << std::setw(DIGITS) << sub_s.count();
 }
 
 OutFileStream &file_logger() {
   static OutFileStream o_file;
+
   if (!o_file.is_open()) {
     o_file.open(
             LOG_FILENAME,
@@ -70,17 +72,19 @@ OutFileStream &file_logger() {
 
     o_file << '\n';
 
-    constexpr auto sig_handler = [](auto sig) {
-      write_time(o_file << '\n')
-              << " | ERR  | Program terminated by signal: " << sig;
-      o_file.flush();
-    };
-    signal(SIGABRT, sig_handler);
-    signal(SIGFPE, sig_handler);
-    signal(SIGILL, sig_handler);
-    signal(SIGINT, sig_handler);
-    signal(SIGSEGV, sig_handler);
-    signal(SIGTERM, sig_handler);
+    /* Handle signals */ {
+      constexpr auto sig_handler = [](auto sig) {
+        write_time(o_file << '\n')
+                << " | ERR  | Program terminated by signal: " << sig;
+        o_file.flush();
+      };
+      signal(SIGABRT, sig_handler);
+      signal(SIGFPE, sig_handler);
+      signal(SIGILL, sig_handler);
+      signal(SIGINT, sig_handler);
+      signal(SIGSEGV, sig_handler);
+      signal(SIGTERM, sig_handler);
+    }
   }
   return o_file;
 }

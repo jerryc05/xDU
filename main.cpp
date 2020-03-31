@@ -51,14 +51,16 @@ int main(int argc, char *argv[]) try {
             }
           }
 
-          try {
-            depth_plus_one = std::stoul(argv[++i]) + 1;
-          } catch (const InvalidArgument &e) {
-            ErrLogger() << "Invalid input for `depth` after \"-d\"";
-            throw RuntimeError(ERR_STR_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
-          } catch (const OutOfRange &e) {
-            ErrLogger() << "Input for `depth` after \"-d\" is out of range";
-            throw RuntimeError(ERR_STR_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE);
+          /* Parse depth variable */ {
+            try {
+              depth_plus_one = std::stoul(argv[++i]) + 1;
+            } catch (const InvalidArgument &e) {
+              ErrLogger() << "Invalid input for `depth` after \"-d\"";
+              throw RuntimeError(ERR_STR_INVALID_INPUT_FOR_DEPTH_AFTER_D_FLAG);
+            } catch (const OutOfRange &e) {
+              ErrLogger() << "Input for `depth` after \"-d\" is out of range";
+              throw RuntimeError(ERR_STR_INPUT_FOR_DEPTH_AFTER_D_FLAG_OUT_OF_RANGE);
+            }
           }
 
         } else {
@@ -68,7 +70,7 @@ int main(int argc, char *argv[]) try {
                         << path << " (aka " << Fs::absolute(path).c_str() << " )";
             throw RuntimeError(ERR_STR_INPUT_PATH_IS_NOT_A_DIR_OR_FILE);
           }
-          paths.push_back(path);
+          paths.push_back(std::move(path));
         }
       }
       return depth_plus_one == 0
@@ -79,6 +81,7 @@ int main(int argc, char *argv[]) try {
   cout << +config.depth << '\n';
   for (const auto &path : config.paths) {
     cout << Fs::absolute(path) << '\n';
+//    cout << Fs::file_size(path) << '\n';
   }
   return 0;
 } catch (const Exception &e) {
