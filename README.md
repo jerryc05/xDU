@@ -14,6 +14,7 @@ DESCRIPTION
 
 	The options are as follows:
 
-	-d depth
-		Print only `depth` level of directory. Maximum value for `depth` is 2^8. Default value is 2.
+	-d `depth`
+		Print only `depth` level of directory. Maximum value for
+		`depth` is 2^8. Default value is 2.
 ```
