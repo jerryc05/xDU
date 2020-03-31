@@ -2,6 +2,7 @@
 #define LOGGER_HPP
 
 #include <iostream>
+#include <fstream>
 
 using std::cout, std::cerr;
 using OutStream = std::ostream;
@@ -12,7 +13,7 @@ OutFileStream &file_logger();
 class BaseLogger {
 public:
   template<typename T>
-  BaseLogger &operator<<(T msg);
+  BaseLogger &operator<<(const T &msg);
 
 protected:
   OutStream &stream_;

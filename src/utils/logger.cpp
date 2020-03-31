@@ -1,5 +1,4 @@
 #include "logger.hpp"
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <chrono>
