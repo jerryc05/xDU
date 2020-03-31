@@ -8,9 +8,7 @@
 #include <vector>
 #include "utils/logger.hpp"
 
-using
-std::cout, std::cerr,
-std::stoull, std::min, std::numeric_limits;
+using std::cout;
 
 using InvalidArgument = std::invalid_argument;
 using OutOfRange = std::out_of_range;
@@ -19,6 +17,7 @@ using Exception = std::exception;
 
 template<typename T> using Vec = std::vector<T>;
 template<typename T> using Optional = std::optional<T>;
+using Path = std::filesystem::path;
 
 namespace Fs = std::filesystem;
 

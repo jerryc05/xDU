@@ -20,6 +20,11 @@ constexpr auto RED_FMT = "\033[1;91m";  // Bold High Intensity Red
 constexpr auto GRN_FMT = "\033[1;92m";  // Bold High Intensity Green
 constexpr auto LGR_FMT = "\033[0;37m";  // Light Grey
 constexpr auto NOC_FMT = "\033[0m";  // No Colors
+#else
+constexpr auto RED_FMT = "";
+constexpr auto GRN_FMT = "";
+constexpr auto LGR_FMT = "";
+constexpr auto NOC_FMT = "";
 #endif
 
 #ifndef LOG_FILENAME_OVERRIDE
@@ -45,8 +50,8 @@ auto &write_time(OutStream &stream) {
         throw RuntimeError("log10(): Invalid UNIT number");
     }
   }();
-  auto           sub_s  = duration_cast<TimeUnit>(now.time_since_epoch()) % UNIT;
 
+  auto sub_s = duration_cast<TimeUnit>(now.time_since_epoch()) % UNIT;
   auto time_ = HighResClock::to_time_t(now);
   auto tm    = *std::localtime(&time_);
 
@@ -55,7 +60,7 @@ auto &write_time(OutStream &stream) {
                 << std::put_time(&tm, TIME_FMT2);
 }
 
-inline auto &file_logger() {
+OutFileStream &file_logger() {
   static OutFileStream o_file;
   if (!o_file.is_open()) {
     o_file.open(
@@ -81,12 +86,6 @@ inline auto &file_logger() {
   return o_file;
 }
 
-template<typename T>
-inline void log_append(OutStream &stream, T msg) {
-  file_logger() << msg;
-  stream << msg;
-}
-
 BaseLogger::BaseLogger(OutStream &stream,
                        const char *const type_str,
                        const char *const color)
@@ -95,60 +94,8 @@ BaseLogger::BaseLogger(OutStream &stream,
   write_time(stream << color << '\n') << " | " << type_str << " | ";
 }
 
-BaseLogger::operator OutStream &() {
-  return stream_;
-}
-
-template<typename T>
-BaseLogger &BaseLogger::operator<<(T msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
 BaseLogger::~BaseLogger() {
   stream_ << NOC_FMT;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(const char *msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(char *msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(char msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(int msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(unsigned short msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(unsigned int msg) {
-  log_append(stream_, msg);
-  return *this;
-}
-
-template<>
-BaseLogger &BaseLogger::operator<<(unsigned long msg) {
-  log_append(stream_, msg);
-  return *this;
 }
 
 ErrLogger::ErrLogger() : BaseLogger(cerr, "ERR ", RED_FMT) {

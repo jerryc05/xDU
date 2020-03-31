@@ -1,23 +1,19 @@
-#ifndef XDU_CORE_HPP
-#define XDU_CORE_HPP
+#ifndef XDU_HPP
+#define XDU_HPP
 
 #include "env-settings.hpp"
 
-using DepthType =
-#ifdef _ENV_64
-    uint64_t // 1*8 bytes
-#elif defined(_ENV_32)
-    uint32_t // 1*4 bytes
-#else
-    uint8_t // 1*1 bytes
-#endif
-    ;
+using DepthType = uint32_t; // 1*4 bytes
+
 
 const uint64_t DEFAULT_DEPTH = 2;
 
 struct XDuConfig {
-  Vec<Fs::path> paths; // 3*8 bytes
-  DepthType     depth = DEFAULT_DEPTH;
+  explicit XDuConfig(Vec<Path> &paths,
+                     const DepthType &depth = DEFAULT_DEPTH);
+
+  const Vec<Path> paths; // 3*8 bytes
+  const DepthType depth = DEFAULT_DEPTH;
 };
 
-#endif // XDU_CORE_HPP
+#endif // XDU_HPP

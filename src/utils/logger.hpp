@@ -1,23 +1,24 @@
-#ifndef XSERVER_LOGGER_HPP
-#define XSERVER_LOGGER_HPP
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
 
 #include <iostream>
 
 using std::cout, std::cerr;
 using OutStream = std::ostream;
+using OutFileStream = std::ofstream;
+
+OutFileStream &file_logger();
 
 class BaseLogger {
 public:
   template<typename T>
   BaseLogger &operator<<(T msg);
 
-  explicit operator OutStream &();
-
 protected:
   OutStream &stream_;
   const char *const type_str_;
 
-  BaseLogger(OutStream &stream, const char *type_str, const char* color);
+  BaseLogger(OutStream &stream, const char *type_str, const char *color);
 
   ~BaseLogger();
 };
@@ -43,4 +44,6 @@ public:
 
 #endif
 
-#endif //XSERVER_LOGGER_HPP
+#include "logger.tpp"
+
+#endif //LOGGER_HPP
