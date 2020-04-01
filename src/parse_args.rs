@@ -26,6 +26,7 @@ Fore more info, please refer to `man du`.
 
   let mut config = XduConfig::default();
   let mut depth_defined = false;
+  args.next();  // Ignore first argv (executable file path)
 
   while let Some(arg) = args.next() {
     if arg == "-d" {
