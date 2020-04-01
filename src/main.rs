@@ -13,16 +13,18 @@ fn main() {
 
   let mut result = vec![];
   while let Some(path) = config.paths.pop() {
-    if path.is_dir() {
-      for entry in path.read_dir().unwrap() {
+    if path.is_file() {
+      result.push((
+        path.symlink_metadata().unwrap().len(),
+        path.into_os_string()
+      ))
+    } else if let Ok(dir_read) = path.read_dir() {
+      for entry in dir_read {
         let path_ = entry.unwrap().path();
         if path_.is_dir() {
           config.paths.push(path_);
-        } else {
-          result.push((
-            path_.symlink_metadata().unwrap().len(),
-            path_.into_os_string()
-          ))
+        } else if let Ok(meta) = path_.symlink_metadata() {
+          result.push((meta.len(), path_.into_os_string()))
         }
       }
     }
