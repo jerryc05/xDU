@@ -2,7 +2,7 @@ use crate::xdu::{DEFAULT_DEPTH, XduConfig};
 use std::path::PathBuf;
 
 #[inline]
-pub(crate) fn parse() -> XduConfig {
+pub(crate) fn parse_args() -> XduConfig {
   let mut args = std::env::args_os();
 
   if args.len() <= 1 {
