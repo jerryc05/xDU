@@ -55,5 +55,5 @@ Fore more info, please refer to `man du`.
       config.paths.push(path);
     }
   }
-  return config;
+  config
 }
