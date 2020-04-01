@@ -1,10 +1,8 @@
-#![feature(exact_size_is_empty)]
-
 use crate::xdu::{DEFAULT_DEPTH, XduConfig};
-use std::path::{Path, PathBuf};
-use std::fs::canonicalize;
+use std::path::PathBuf;
 
-fn parse() -> XduConfig {
+#[inline]
+pub(crate) fn parse() -> XduConfig {
   let mut args = std::env::args_os();
 
   if args.len() <= 1 {
@@ -27,30 +25,30 @@ Fore more info, please refer to `man du`.
   }
 
   let mut config = XduConfig::default();
-  let depth_defined = false;
+  let mut depth_defined = false;
 
   while let Some(arg) = args.next() {
     if arg == "-d" {
+      let depth;
+
       /* Error handling */ {
         if depth_defined {
           panic!("Duplicate definition of \"-d\"!");
         }
-        if args.is_empty() {
-          panic!("No input for `depth` after \"-d\"!");
-        }
+        depth = args.next().expect("No input for `depth` after \"-d\"!");
       }
 
       /* Parse depth variable */ {
-        config.depth = arg.to_string_lossy().parse().expect(format!(
-          "Failed to parse [{:?}] to u8!", arg).as_ref());
+        config.depth = depth.to_string_lossy().parse().unwrap_or_else(|_|
+          panic!("Failed to parse [{:?}] to u8!", depth));
+        depth_defined = true;
       }
     } else {
       let path = PathBuf::from(arg);
 
       /* Validate path string */ {
         if !path.is_dir() && !path.is_file() {
-          panic!("The input is not a directory or a file: [{}] \
-          (aka [{}] )!", path, canonicalize(&path));
+          panic!("The input is not a directory or a file: [{:?}]!", path);
         }
       }
 
