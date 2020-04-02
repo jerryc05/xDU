@@ -1,12 +1,14 @@
 #![feature(exact_size_is_empty)]
 #![feature(const_int_pow)]
 #![feature(with_options)]
+#![feature(try_trait)]
 
 use crate::parse_args::parse_args;
 use crate::convert_unit::convert_unit;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::Path;
+
 mod parse_args;
 mod xdu;
 mod convert_unit;
@@ -15,14 +17,12 @@ const FILE_NAME: &str = "log.log";
 
 fn main() {
   let mut config = parse_args();
+  println!("Working on it ...");
 
   let mut result = vec![];
   while let Some(path) = config.paths.pop() {
     if path.is_file() {
-      result.push((
-        path.symlink_metadata().unwrap().len(),
-        path.into_os_string()
-      ))
+      result.push((path.symlink_metadata().unwrap().len(), path.into_os_string()))
     } else {
       match path.read_dir() {
         Ok(dir_read) => {
@@ -36,10 +36,8 @@ fn main() {
           }
         }
         Err(e) => {
-          eprintln!("Failed to read [{:?}] (aka [{:?}]): {}",
-                    path,
-                    path.canonicalize().unwrap(),
-                    e);
+          eprintln!("Failed to read [{}] (aka [{}]): {}", path.to_string_lossy(),
+                    path.canonicalize().unwrap().to_string_lossy(), e);
         }
       }
     }
@@ -47,21 +45,26 @@ fn main() {
 
   result.sort_unstable_by(|(a, _), (b, _)| a.cmp(b));
 
-  let file = File::create(FILE_NAME).unwrap();
+  let file = File::with_options().create(true).write(true).truncate(true)
+                                 .open(FILE_NAME).unwrap();
   let mut log = BufWriter::new(file);
 
   for (len, path) in &result {
     let (amount, label) = convert_unit(*len);
 
     let precision = 3;
-
-
     write!(log, "{:>1$.2$}", amount, precision + 4, precision)
       .unwrap_or_else(|_| {});
+    print!("{:>1$.2$}", amount, precision + 4, precision);
+
     writeln!(log, " {:>3}: {}", label, path.to_string_lossy())
       .unwrap_or_else(|_| {});
+    println!(" {:>3}: {}", label, path.to_string_lossy());
   }
 
-  println!("logs saved to [{}]!",
+  println!();
+  println!("{:-<64}","");
+  println!("Log file saved to [{}]!",
            Path::new(FILE_NAME).canonicalize().unwrap().to_string_lossy());
+  println!("{:-<64}","");
 }
