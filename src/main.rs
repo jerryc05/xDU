@@ -22,7 +22,8 @@ fn main() {
   let mut result = vec![];
   while let Some(path) = config.paths.pop() {
     if path.is_file() {
-      result.push((path.symlink_metadata().unwrap().len(), path.into_os_string()))
+      result.push((path.symlink_metadata().unwrap().len(),
+                   path.into_os_string()))
     } else {
       match path.read_dir() {
         Ok(dir_read) => {
@@ -53,9 +54,11 @@ fn main() {
     let (amount, label) = convert_unit(*len);
 
     let precision = 3;
-    write!(log, "{:>1$.2$}", amount, precision + 4, precision)
+    let whole_len = precision + 4 + 1;
+
+    write!(log, "{:>1$.2$}", amount, whole_len, precision)
       .unwrap_or_else(|_| {});
-    print!("{:>1$.2$}", amount, precision + 4, precision);
+    print!("{:>1$.2$}", amount, whole_len, precision);
 
     writeln!(log, " {:>3}: {}", label, path.to_string_lossy())
       .unwrap_or_else(|_| {});
@@ -63,8 +66,9 @@ fn main() {
   }
 
   println!();
-  println!("{:-<64}","");
+  println!("{:-<64}", "");
   println!("Log file saved to [{}]!",
-           Path::new(FILE_NAME).canonicalize().unwrap().to_string_lossy());
-  println!("{:-<64}","");
+           Path::new(FILE_NAME).canonicalize().unwrap()
+                               .to_string_lossy());
+  println!("{:-<64}", "");
 }
