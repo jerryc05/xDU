@@ -1,7 +1,5 @@
-#![feature(exact_size_is_empty)]
 #![feature(const_int_pow)]
 #![feature(with_options)]
-#![feature(try_trait)]
 
 use crate::parse_args::parse_args;
 use crate::convert_unit::convert_unit;
