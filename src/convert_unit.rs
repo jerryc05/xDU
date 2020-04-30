@@ -1,6 +1,7 @@
-const UNIT_TUPLE: [(u64, &str); 6] = {
-  let mut i = 0_u32;
+const UNITS: [(u64, &str); 7] = {
+  let mut i = 0;
 
+  let __b = i as u64;
   let kib = {
     1024_u64.pow({
       i += 1;
@@ -39,6 +40,7 @@ const UNIT_TUPLE: [(u64, &str); 6] = {
   };
 
   [
+    (__b, "B"),
     (kib, "KiB"),
     (mib, "MiB"),
     (gib, "GiB"),
@@ -48,11 +50,48 @@ const UNIT_TUPLE: [(u64, &str); 6] = {
   ]
 };
 
-pub(crate) fn convert_unit(bytes: u64) -> (f32, &'static str) {
-  for (amount, label) in UNIT_TUPLE.iter().rev() {
-    if bytes > *amount {
-      return (bytes as f32 / *amount as f32, label);
-    }
+pub(crate) const fn convert_unit(bytes: u64) -> (f32, &'static str) {
+  let mut i = 0;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32, UNITS[i].1);
   }
-  (bytes as f32, "B")
+
+  i += 1;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1);
+  }
+
+  i += 1;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1);
+  }
+
+  i += 1;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1);
+  }
+
+  i += 1;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1);
+  }
+
+  i += 1;
+  if bytes < UNITS[i + 1].0 {
+    return (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1);
+  }
+
+  i += 1;
+  (bytes as f32 / UNITS[i].0 as f32, UNITS[i].1)
+}
+
+#[test]
+fn test_convert_unit() {
+  assert_eq!((0., "B"), convert_unit(0));
+  assert_eq!((1., "B"), convert_unit(1));
+  assert_eq!((1023., "B"), convert_unit(1023));
+  assert_eq!((1., "KiB"), convert_unit(1024));
+  assert_eq!((1.5, "KiB"), convert_unit((1024 as f32 * 1.5) as u64));
+  assert_eq!((1023., "KiB"), convert_unit(1023*1024));
+  assert_eq!((1., "MiB"), convert_unit(1024*1024));
 }
