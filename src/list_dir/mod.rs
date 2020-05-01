@@ -1,11 +1,4 @@
-#![allow(unused_imports)]
 #![allow(dead_code)]
-
-use std::ffi::OsString;
-use std::mem;
-use std::ptr;
-
-use num_traits::AsPrimitive;
 
 use crate::utils::my_err::*;
 
@@ -22,10 +15,10 @@ pub(crate) fn list_dir() -> Result<u64> {
     win::win()
   }
   #[cfg(target_os = "linux")] {
-    linux()
+    unimplemented!()
   }
   #[cfg(target_os = "macos")] {
-    macos()
+    unimplemented!()
   }
   #[cfg(not(any(
   target_os = "windows",

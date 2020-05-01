@@ -13,6 +13,7 @@ use crate::parse_args::parse_args;
 #[macro_use]
 pub mod utils;
 pub mod convert_unit;
+pub mod file_size;
 pub mod list_dir;
 pub mod parse_args;
 pub mod xdu;
