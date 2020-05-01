@@ -11,38 +11,46 @@ fn bench_file_size_win(c: &mut Criterion) {
   let file_name = file!();
   assert!(Path::new(file_name).exists());
 
-  let file_name_w = str_to_pwchar(file_name);
   let mut group = c.benchmark_group("bench_file_size_win");
+
+  macro_rules! wchar {
+      () => {str_to_pwchar(file_name).as_ptr();};
+  }
 
   group.bench_function(
     "win_GetFileSizeEx",
     |b| b.iter(
-      || win_GetFileSizeEx(file_name_w.as_ptr())));
+      || win_GetFileSizeEx(wchar!())));
 
   group.bench_function(
     "win_GetFileAttributesExW",
     |b| b.iter(
-      || win_GetFileAttributesExW(file_name_w.as_ptr())));
+      || win_GetFileAttributesExW(wchar!())));
 
   group.bench_function(
     "win_GetFileInformationByHandleEx",
     |b| b.iter(
-      || win_GetFileInformationByHandleEx(file_name_w.as_ptr())));
+      || win_GetFileInformationByHandleEx(wchar!())));
 
   group.bench_function(
     "win_FindFirstFileW",
     |b| b.iter(
-      || win_FindFirstFileW(file_name_w.as_ptr())));
+      || win_FindFirstFileW(wchar!())));
 
   group.bench_function(
     "win_FindFirstFileExW_basic",
     |b| b.iter(
-      || win_FindFirstFileExW_basic(file_name_w.as_ptr())));
+      || win_FindFirstFileExW_basic(wchar!())));
+
+  group.bench_function(
+    "win_FindFirstFileExW_basic_large",
+    |b| b.iter(
+      || win_FindFirstFileExW_basic_large(wchar!())));
 
   group.bench_function(
     "win_FindFirstFileExW_std",
     |b| b.iter(
-      || win_FindFirstFileExW_std(file_name_w.as_ptr())));
+      || win_FindFirstFileExW_std(wchar!())));
 
   group.bench_function(
     "std",

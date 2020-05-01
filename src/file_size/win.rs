@@ -137,6 +137,29 @@ pub fn win_FindFirstFileExW_basic(lpFileName: LPCWSTR) -> Result<u64> {
     let hFile: HANDLE = FindFirstFileExW(
       lpFileName, FindExInfoBasic,
       &mut fInfo as *mut WIN32_FIND_DATAW as LPVOID,
+      FindExSearchNameMatch, ptr::null_mut(), 0);
+
+    if hFile == INVALID_HANDLE_VALUE {
+      return Err(my_err_of_str!(format!(
+        "Failed to open file: [{:?}], error: [{:?}]!",
+        str_of_pwchar(lpFileName), str_of_last_err()), 4));
+    }
+    CloseHandle(hFile);
+
+    let hi = (fInfo.nFileSizeHigh as u64) <<
+      (8 * mem::size_of_val(&fInfo.nFileSizeLow));
+    Ok(hi | (fInfo.nFileSizeLow as u64))
+  }
+}
+
+#[allow(non_snake_case)]
+#[inline]
+pub fn win_FindFirstFileExW_basic_large(lpFileName: LPCWSTR) -> Result<u64> {
+  unsafe {
+    let mut fInfo: WIN32_FIND_DATAW = mem::zeroed();
+    let hFile: HANDLE = FindFirstFileExW(
+      lpFileName, FindExInfoBasic,
+      &mut fInfo as *mut WIN32_FIND_DATAW as LPVOID,
       FindExSearchNameMatch, ptr::null_mut(),
       FIND_FIRST_EX_LARGE_FETCH);
 
