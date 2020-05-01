@@ -10,11 +10,11 @@ use std::path::Path;
 use crate::convert_unit::convert_unit;
 use crate::parse_args::parse_args;
 
+#[macro_use]
+pub mod utils;
 pub mod convert_unit;
 pub mod list_dir;
-pub mod my_err;
 pub mod parse_args;
-pub mod utils;
 pub mod xdu;
 
 const FILE_NAME: &str = "log.log";
