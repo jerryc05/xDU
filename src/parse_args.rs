@@ -1,5 +1,6 @@
+use std::path::{Path, PathBuf};
+
 use crate::xdu::XduConfig;
-use std::path::{PathBuf, Path};
 
 #[inline]
 pub(crate) fn parse_args() -> XduConfig {

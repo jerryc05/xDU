@@ -1,19 +1,25 @@
+#![feature(const_fn)]
+#![feature(const_if_match)]
 #![feature(const_int_pow)]
 #![feature(with_options)]
 
-use crate::parse_args::parse_args;
-use crate::convert_unit::convert_unit;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::Path;
 
-mod parse_args;
-mod xdu;
-mod convert_unit;
+use crate::convert_unit::convert_unit;
+use crate::parse_args::parse_args;
+
+pub mod convert_unit;
+pub mod list_dir;
+pub mod my_err;
+pub mod parse_args;
+pub mod utils;
+pub mod xdu;
 
 const FILE_NAME: &str = "log.log";
 
-fn main() {
+pub fn main() {
   let mut config = parse_args();
   println!("Working on it ...");
 
